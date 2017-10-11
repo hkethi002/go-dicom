@@ -392,7 +392,7 @@ func ReadElement(d *dicomio.Decoder, options ReadOptions) *Element {
 	if tag == TagPixelData && options.DropPixelData {
 		return nil
 	}
-	if tag == options.StopAtTag {
+	if tag == *options.StopAtTag {
 		return nil
 	}
 	// The elements for group 0xFFFE should be Encoded as Implicit VR.
