@@ -40,7 +40,8 @@ func doassert(cond bool, values ...interface{}) {
 // ReadOptions defines how DataSets and Elements are parsed.
 type ReadOptions struct {
 	// If true, skip the PixelData element (bulk images) in ReadDataSet.
-	DropPixelData bool
+	StopAtTag 		*Tag
+	DropPixelData 	bool
 }
 
 // ReadDataSetInBytes is a shorthand for ReadDataSet(bytes.NewBuffer(data), len(data)).
