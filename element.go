@@ -401,10 +401,7 @@ func ReadElement(d *dicomio.Decoder, options ReadOptions) *Element {
 	if tag == TagPixelData && options.DropPixelData {
 		return nil
 	}
-	if options.StopAtTag != nil && tag == *options.StopAtTag {
-		return nil
-	}
-	if options.ReturnTags != nil && len(options.ReturnTags) > 0 && !tagInList(tag, options.ReturnTags) {
+	if options.StopAtTag != nil && tag.Group >= options.StopAtTag.Group && tag.Element >= options.StopAtTag.Element {
 		return nil
 	}
 	// The elements for group 0xFFFE should be Encoded as Implicit VR.
@@ -500,7 +497,7 @@ func ReadElement(d *dicomio.Decoder, options ReadOptions) *Element {
 			d.PushLimit(int64(vl))
 			defer d.PopLimit()
 			for d.Len() > 0 {
-				item := ReadElement(d, options)
+				item := ReadElement(d, ReadOptions{DropPixelData: options.DropPixelData})
 				if d.Error() != nil {
 					break
 				}

@@ -114,7 +114,9 @@ func ReadDataSet(in io.Reader, bytes int64, options ReadOptions) (*DataSet, erro
 				}
 			}
 		}
-		file.Elements = append(file.Elements, elem)
+		if tagInList(elem.Tag, options.ReturnTags) {
+			file.Elements = append(file.Elements, elem)
+		}
 	}
 	return file, buffer.Error()
 }
