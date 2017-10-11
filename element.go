@@ -385,6 +385,15 @@ func ParseFileHeader(d *dicomio.Decoder) []*Element {
 	return metaElems
 }
 
+func tagInList(tag Tag, tags []Tag) bool {
+	for _, t := range tags {
+		if tag == t {
+			return true
+		}
+	}
+	return false
+}
+
 // ReadDataElement reads one DICOM data element. Errors are reported through
 // d.Error(). The caller must check d.Error() before using the returned value.
 func ReadElement(d *dicomio.Decoder, options ReadOptions) *Element {
@@ -393,6 +402,9 @@ func ReadElement(d *dicomio.Decoder, options ReadOptions) *Element {
 		return nil
 	}
 	if options.StopAtTag != nil && tag == *options.StopAtTag {
+		return nil
+	}
+	if options.ReturnTags != nil && len(options.ReturnTags) > 0 && !tagInList(tag, options.ReturnTags) {
 		return nil
 	}
 	// The elements for group 0xFFFE should be Encoded as Implicit VR.
